@@ -5,40 +5,22 @@
         <one />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-two">
-        <div class="page">
-          <h3>经典案例</h3>
-          <p>Suecessful Cass</p>
-        </div>
+        <two />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-three">
-        <div class="page">
-          <h3>最新资讯</h3>
-          <p>Latest News</p>
-        </div>
+        <three />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-fouth">
-        <div class="page">
-          <h3>最新资讯</h3>
-          <p>Latest News</p>
-        </div>
+        <fouth />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-five">
-        <div class="page">
-          <h3>最新资讯</h3>
-          <p>Latest News</p>
-        </div>
+        <five />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-six">
-        <div class="page">
-          <h3>最新资讯</h3>
-          <p>Latest News</p>
-        </div>
+        <six />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-siven">
-        <div class="page">
-          <h3>最新资讯</h3>
-          <p>Latest News</p>
-        </div>
+        <siven />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-eight">
         <eight />
@@ -50,15 +32,26 @@
 <script>
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import one from "./components/one.vue";
+import two from "./components/two.vue";
 import eight from "./components/eight.vue";
-import { getData } from "@/api";
+import three from "./components/three.vue";
+import fouth from "./components/fouth.vue";
+import five from "./components/five.vue";
+import six from "./components/six.vue";
+import siven from "./components/siven.vue";
 export default {
   name: "HelloWorld",
   components: {
     swiper,
     swiperSlide,
     one,
-    eight
+    two,
+    three,
+    eight,
+    fouth,
+    five,
+    six,
+    siven
   },
   data () {
     return {
@@ -101,15 +94,10 @@ export default {
     }
   },
   created () {
-    this.fetchData()
   },
   mounted () {
   },
   methods: {
-    async fetchData () {
-      const res = await getData({ code: 'kp_lm_wzsy' })
-      console.log('res:', res)
-    }
   }
 };
 </script>
@@ -207,7 +195,7 @@ export default {
 //   background: seashell;
 // }
 .slide-one {
-  background: url('../../assets/image/矩形\ 2@2x.png') no-repeat center;
+  background: url('../../assets/image/main-bg1.png') no-repeat center;
   background-size: cover;
 }
 

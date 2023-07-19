@@ -11,18 +11,23 @@ let kejianrouter = new Router({
       component: () => import('./views/Home/index.vue')
     },
     {
-      path: '/news',
-      name: 'news',
-      component: () => import('./views/News.vue'),
+      path: '/list',
+      name: 'list',
+      component: () => import('./views/List/index.vue'),
+    },
+    {
+      path: '/detail',
+      name: 'Detail',
+      component: () => import('./views/Detail/index.vue'),
     },
   ]
 })
 
 // 判断是否需要登录权限 以及是否登录
 kejianrouter.beforeEach((to, from, next) => {
-  console.log('to:', to)
   if(to.name === 'home') {
     store.commit('setActive',0)
+    localStorage.setItem('navIndex', 0)
   }else {
     store.commit('setActive',-1)
   }

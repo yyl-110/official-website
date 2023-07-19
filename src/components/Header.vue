@@ -3,22 +3,30 @@
     <div class="logo">
       <img :src="activeIndex === 0 ? require('../assets/image/logo.png') : require('../assets/image/logo2.png')" alt />
     </div>
-    <el-menu :default-active="defaultActive" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-      :router="router" :text-color="activeIndex === 0 ? '#ffffff' : '#333333'" active-text-color="#ffffff">
-      <el-menu-item index="/">首页</el-menu-item>
-      <el-menu-item index="/news">最近丹顶鹤</el-menu-item>
-      <el-menu-item index="/news1">旅游区动态</el-menu-item>
-      <el-menu-item index="/news2">丹顶鹤文化</el-menu-item>
-      <el-menu-item index="/news3">旅游服务</el-menu-item>
-      <el-menu-item index="/news4">联系我们</el-menu-item>
-      <el-submenu index="2">
-        <template slot="title">网站语言</template>
-        <el-menu-item index="2-1" style="color:#333">中文</el-menu-item>
-        <el-menu-item index="2-2" style="color:#333">英文</el-menu-item>
-      </el-submenu>
-    </el-menu>
-    <button type="button" class="navbar_toggle"><span class="icon-bar"></span> <span class="icon-bar"></span> <span
-        class="icon-bar"></span></button>
+    <div class="nav_header">
+      <div class="tab">
+        <div :class="['tab_r', activeIndex === 0 ? 'homeTab' : '']">
+          <div :class="['tab_item', defaultActive === item.code ? 'current' : '']" v-for="(item, index) in navList"
+            :key="item.id" @click="handleSelect(item.code, index, item.id)">
+            <span>{{ item.name }}</span>
+            <div class="tab_item_sub" v-if="item.list && item.list.length">
+              <span style="display: flex; flex-direction: column;">
+                <span class="tab_item_sub_txt" v-for="val in item.list" :key="val.id"
+                  @click.stop="handleSubSelect(item.code, index, val.id, val.code)">{{ val.name }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="navbar_toggle" @click="show = !show"><span class="icon-bar"></span> <span
+        class="icon-bar"></span> <span class="icon-bar"></span></button>
+    <div class="navbar_collapse" v-if="show">
+      <ul class="nav navbar_nav">
+        <li v-for="item in navList" :key="item.id"><span :class="[defaultActive === item.code ? 'active' : '']"
+            @click="handleSelect(item.code, index, item.id)">{{ item.name }}</span></li>
+      </ul>
+    </div>
   </header>
 </template>
 
@@ -30,12 +38,25 @@ export default {
     return {
       navList: [],
       activeIndex: 0,
-      defaultActive: "/",
-      router: true
+      defaultActive: "ly_lm_wzsy", // 默认首页
+      show: false,
+      navSignList: [
+        { name: '网站首页', value: 'ly_lm_wzsy', },
+        { name: '走进丹顶鹤', value: 'ly_lm_zjddh', },
+        { name: '旅游区动态', value: 'ly_lm_lyqdt', },
+        { name: '丹顶鹤文化', value: 'ly_lm_ddhwh', },
+        { name: '旅游服务', value: 'ly_lm_lyfw', },
+        { name: '联系我们', value: 'ly_lm_lxwm', },
+        { name: '网站语言', value: 'ly_lm_wzyy', },
+      ]
     }
   },
   created () {
+    /* 获取数据 */
     this.handleGetNavList()
+
+    this.activeIndex = this.$store.state.homeActiveIndex
+
   },
   computed: {
     homeActiveIndex () {
@@ -43,13 +64,59 @@ export default {
     }
   },
   methods: {
-    handleSelect (key) {
-      this.isShow = this.defaultActive != key;
+    handleSelect (key, index, id) {
+      /* 中英文切换 */
+      if (key === 'ly_lm_wzyy') {
+        return
+      }
+      this.defaultActive = key
+      let path = '/'
+      if (key === 'ly_lm_wzsy') {
+        path = `/`
+      } else {
+        path = `/list?code=${key}&id=${id}`
+      }
+      try {
+        localStorage.setItem('navIndex', this.navSignList.findIndex(i => i.value === key))
+      } catch (error) {
+        console.log('error:', error)
+      }
+      this.show = false
+      this.$router.push(path)
     },
-    handleGetNavList: async () => {
-      const res = await getNavList({ code: 'kp_lm_dbdh' })
+    handleSubSelect (key, index, id, subCode) {
+      /* 中英文切换 */
+      if (key === 'ly_lm_wzyy') {
+
+        return
+      }
+      this.defaultActive = key
+      let path = '/'
+      if (key === 'ly_lm_wzsy') {
+        path = `/`
+      } else {
+        path = `/list?code=${key}&id=${id}`
+      }
+      try {
+        localStorage.setItem('navIndex', this.navSignList.findIndex(i => i.value === key))
+      } catch (error) {
+        console.log('error:', error)
+      }
+      this.show = false
+      this.$router.push(path)
+    },
+    async handleGetNavList () {
+      const res = await getNavList({ code: 'ly_lm_dbdh' })
       if (res.code === 0) {
-        this.navList = res.data.list
+        this.navList = res.data
+
+        const navCode = this.$route.query.code
+        let navIndex = localStorage.getItem('navIndex') || 0
+        if (navCode && this.navList.some(i => i.code === navCode)) {
+          navIndex = this.navList.findIndex(i => i.code === navCode)
+        }
+        /* 设置全局nav */
+        this.defaultActive = this.navList[navIndex].code
       }
     }
   },
@@ -71,6 +138,101 @@ export default {
   }
 }
 
+@media screen and (min-width: 1023px) {
+  header {
+    .nav_header {
+      display: flex;
+      align-items: center;
+      position: relative;
+      justify-content: space-between;
+      position: relative;
+
+      .tab {
+        height: 80px;
+        padding-right: 50px;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        position: relative;
+        transition: all .2s linear;
+
+        .tab_r {
+          flex: 1;
+          height: 80px;
+          width: 100%;
+          background: #fff;
+          justify-content: space-between;
+          display: flex;
+          align-items: center;
+
+          &.homeTab {
+            background-color: transparent;
+
+            .tab_item {
+              color: #fff;
+            }
+          }
+
+          .tab_item {
+            position: relative;
+            cursor: pointer;
+            color: #363636;
+            font-size: 16px;
+            height: 100%;
+            padding: 0 14px;
+            transition: all .2s linear;
+            display: flex;
+            align-items: center;
+
+            &:hover {
+              background-color: #3cb4d6;
+              color: #fff;
+
+              .tab_item_sub {
+                display: block;
+              }
+            }
+
+            .tab_item_sub {
+              display: none;
+              left: 0;
+              top: 80px;
+              width: auto;
+              min-width: 160px;
+              background: transparent;
+              height: 100%;
+              position: absolute;
+              line-height: 60px;
+              font-size: 16px;
+              color: #fff;
+              z-index: 999999999;
+
+              .tab_item_sub_txt {
+                cursor: pointer;
+                padding: 0 12px;
+                text-align: center;
+                display: inline-flex;
+                width: 100%;
+                background: rgba(0, 0, 0, .8);
+                white-space: nowrap;
+                align-items: center;
+                justify-content: center;
+                line-height: 60px;
+              }
+            }
+
+            &.current {
+              color: #fff;
+              background-color: #3cb4d6;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -84,7 +246,9 @@ header {
   z-index: 999999;
   background: #FFFFFF;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.13);
-  transition: all 0.3s;
+  box-sizing: border-box;
+  padding-left: 57px;
+
 
   &.active {
     border-bottom: 1px solid rgba(234, 234, 234, 0.3);
@@ -92,25 +256,73 @@ header {
     box-shadow: none;
   }
 
-  box-sizing: border-box;
-  padding-left: 57px;
-
-  .el-menu.el-menu--horizontal {
-    border: none;
-  }
 
   .navbar_toggle {
     display: none;
     cursor: pointer;
   }
 
+  .navbar_collapse {
+    display: none;
+  }
+
   @media screen and (max-width: 1023px) {
-    .el-menu-demo {
+    .nav_header {
       display: none;
     }
 
+    .navbar_collapse {
+      top: 80px;
+      height: auto !important;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      box-sizing: border-box;
+      overflow-y: auto;
+      display: block;
+      z-index: 1000;
+      background: #fff;
+      padding: 0;
+      overflow-x: visible;
+      border: none;
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 hsla(0, 0%, 100%, .1);
+      padding-top: 20px;
+
+      .navbar_nav {
+        width: 100%;
+        float: none;
+        display: inline-block;
+        padding-bottom: 20px;
+
+        li {
+          cursor: pointer;
+          float: none;
+          text-align: center;
+          width: 100%;
+          margin: 0;
+          position: relative;
+          display: block;
+
+
+          span {
+            color: #000;
+            padding: 0;
+            line-height: 40px;
+            font-size: 15px;
+            display: block;
+
+            &.active {
+              color: #3CB4D6;
+            }
+          }
+        }
+      }
+    }
+
+
     .navbar_toggle {
-      display: block !important;
+      display: block;
       position: relative;
       padding: 9px 10px;
       background-color: transparent;
@@ -129,30 +341,6 @@ header {
           margin-top: 4px;
         }
       }
-    }
-  }
-
-  .el-menu--horizontal>.el-menu-item:not(.is-disabled):hover,
-  .el-menu--horizontal>.el-submenu .el-submenu__title:hover,
-  .el-menu--horizontal>.el-menu-item:not(.is-disabled):focus {
-    background-color: #3CB4D6;
-  }
-
-  .el-menu--horizontal>.el-menu-item.is-active {
-    border: none;
-    background-color: #3CB4D6;
-  }
-
-  .el-menu-item {
-    border-bottom: none !important;
-  }
-
-  .el-menu {
-    background-color: transparent;
-    height: 100%;
-
-    &::after {
-      display: none;
     }
   }
 

@@ -61,10 +61,9 @@ export default {
 @media screen and (max-width: 1023px) {
   .one {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding-bottom: 80px;
     box-sizing: border-box;
 
     .intron {

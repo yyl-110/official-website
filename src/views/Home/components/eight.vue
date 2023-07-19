@@ -1,5 +1,6 @@
 <template>
   <div class="eight">
+    <CardTitle title="虚拟游" />
     <img src="../../../assets/image/map.png" alt="" class="map">
     <Footer />
   </div>
@@ -7,9 +8,11 @@
 
 <script>
 import Footer from '../../../components/Footer.vue';
+import CardTitle from './cardTitle.vue';
 export default {
   components: {
-    Footer
+    Footer,
+    CardTitle
   }
 }
 </script>
@@ -20,9 +23,10 @@ export default {
   height: 100%;
 
   .map {
-    width: 80%;
+    width: 70%;
     display: block;
-    margin: 180px auto 0;
+    height: 555px;
+    margin: 200px auto 0;
   }
 }
 </style>
