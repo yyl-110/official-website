@@ -3,7 +3,7 @@
     <div class="intron">
       <div class="left">
         <img src="../../../assets/image/gg.png" alt="">
-        <span>景区公告</span>
+        <span>{{$t('common.nav_title1')}}</span>
       </div>
       <div class="line"></div>
       <div class="list">

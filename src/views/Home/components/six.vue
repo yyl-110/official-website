@@ -1,16 +1,17 @@
 <template>
   <div class="six">
-    <CardTitle title="旅游服务" />
+    <CardTitle :title="$t('common.nav_title6')" />
     <div class="content">
-      <div class="item" v-for="(item, index) in list" :key="index">
-        <img :src="item.imgUrl" alt="">
-        <p class="text">{{ item.title }}</p>
+      <div class="item" v-for="(item, index) in navList" :key="item.id" @click="goToList(item.id)">
+        <img :src="item.imgUrl | imgFilter" alt="">
+        <p class="text">{{ item.name }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getData } from '../../../api';
 import CardTitle from './cardTitle.vue';
 export default {
   components: { CardTitle },
@@ -23,7 +24,33 @@ export default {
         { imgUrl: require('../../../assets/image/jdzs.png'), title: '酒店住宿' },
         { imgUrl: require('../../../assets/image/xxyl.png'), title: '休闲娱乐' },
         { imgUrl: require('../../../assets/image/lygl.png'), title: '旅游攻略' },
-      ]
+      ],
+      navList: []
+    }
+  },
+  filters: {
+    imgFilter (val) {
+      return process.env.VUE_APP_PUBLIC_URL + val
+    }
+  },
+  created () {
+    this.getList()
+  },
+  methods: {
+    async getList () {
+      const res = await getData({ code: 'ly_lm_lyfw' })
+      if (res.code === 0) {
+        this.navList = res.data.list
+      }
+    },
+    goToList (id) {
+      this.$router.push({
+        path: '/list',
+        query: {
+          code: 'ly_lm_lyfw',
+          id
+        }
+      })
     }
   }
 }
@@ -112,4 +139,5 @@ export default {
       }
     }
   }
-}</style>
+}
+</style>

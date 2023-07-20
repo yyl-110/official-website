@@ -1,54 +1,18 @@
 <template>
   <div class="three">
-    <cardTitle title="景点介绍" />
+    <cardTitle :title="$t('common.nav_title3')" />
     <el-carousel class="carousel" :autoplay="false">
-      <el-carousel-item v-for="item in 4" :key="item">
+      <el-carousel-item v-for="(item, index) in arrList" :key="index">
         <div class="imgList">
-          <div class="imgwrap">
-            <img src="../../../assets/image/jd1.png" alt="" class="img">
+          <div class="imgwrap" v-for="val in item" :key="val.id">
+            <img :src="val.imgUrl | imgFilter" alt="" class="img">
             <div class="content">
-              <h1>洋沙湖欢乐水世界</h1>
+              <h1>{{ val.title }}</h1>
               <div class="info">
-                洋沙湖红色文化小镇，位于洋沙湖国家湿地公园东部，临湖而建，占地面积近6000平方米，街区长约300米，是一个集党性教育、红色文化教育、爱国主义教育、思想道德教育于一体的红色文化小镇。小镇分为“建党”和“建军”两个主题版块，分别记录了中国共产党和中国人民解放军自成立以来的光辉历程，并拥有与之配套的多个党建活动室和会议室。是我省重要的红色文化研学和党建教育基地。
+                {{ val.introduction }}
               </div>
-              <div class="more">
-                MORE <img src="../../../assets/image/right.png" alt="">
-              </div>
-            </div>
-          </div>
-          <div class="imgwrap">
-            <img src="../../../assets/image/jd2.png" alt="" class="img">
-            <div class="content">
-              <h1>洋沙湖欢乐水世界</h1>
-              <div class="info">
-                洋沙湖红色文化小镇，位于洋沙湖国家湿地公园东部，临湖而建，占地面积近6000平方米，街区长约300米，是一个集党性教育、红色文化教育、爱国主义教育、思想道德教育于一体的红色文化小镇。小镇分为“建党”和“建军”两个主题版块，分别记录了中国共产党和中国人民解放军自成立以来的光辉历程，并拥有与之配套的多个党建活动室和会议室。是我省重要的红色文化研学和党建教育基地。
-              </div>
-              <div class="more">
-                MORE <img src="../../../assets/image/right.png" alt="">
-              </div>
-            </div>
-          </div>
-          <div class="imgwrap">
-            <img src="../../../assets/image/jd3.png" alt="" class="img">
-            <div class="content">
-              <h1>洋沙湖欢乐水世界</h1>
-              <div class="info">
-                洋沙湖红色文化小镇，位于洋沙湖国家湿地公园东部，临湖而建，占地面积近6000平方米，街区长约300米，是一个集党性教育、红色文化教育、爱国主义教育、思想道德教育于一体的红色文化小镇。小镇分为“建党”和“建军”两个主题版块，分别记录了中国共产党和中国人民解放军自成立以来的光辉历程，并拥有与之配套的多个党建活动室和会议室。是我省重要的红色文化研学和党建教育基地。
-              </div>
-              <div class="more">
-                MORE <img src="../../../assets/image/right.png" alt="">
-              </div>
-            </div>
-          </div>
-          <div class="imgwrap">
-            <img src="../../../assets/image/jd3.png" alt="" class="img">
-            <div class="content">
-              <h1>洋沙湖欢乐水世界</h1>
-              <div class="info">
-                洋沙湖红色文化小镇，位于洋沙湖国家湿地公园东部，临湖而建，占地面积近6000平方米，街区长约300米，是一个集党性教育、红色文化教育、爱国主义教育、思想道德教育于一体的红色文化小镇。小镇分为“建党”和“建军”两个主题版块，分别记录了中国共产党和中国人民解放军自成立以来的光辉历程，并拥有与之配套的多个党建活动室和会议室。是我省重要的红色文化研学和党建教育基地。
-              </div>
-              <div class="more">
-                MORE <img src="../../../assets/image/right.png" alt="">
+              <div class="more" @click="goToDetail(val.id)">
+                {{ $t('common.more') }} <img src="../../../assets/image/right.png" alt="">
               </div>
             </div>
           </div>
@@ -60,8 +24,35 @@
 
 <script>
 import cardTitle from './cardTitle.vue';
+import _ from 'lodash'
 export default {
-  components: { cardTitle }
+  components: { cardTitle },
+  props: {
+    attractions: {
+      type: Array,
+      default: () => []
+    }
+  },
+  filters: {
+    imgFilter (val) {
+      return process.env.VUE_APP_PUBLIC_URL + val
+    }
+  },
+  computed: {
+    arrList () {
+      return _.chunk(this.attractions, 4);
+    }
+  },
+  methods: {
+    goToDetail (id) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          id
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -202,9 +193,11 @@ export default {
 
   .el-carousel__indicators--horizontal {
     bottom: 0;
+
     .el-carousel__indicator--horizontal {
       padding: 0 10px;
     }
+
     .el-carousel__button {
       width: 8px;
       height: 8px;

@@ -1,38 +1,40 @@
 <template>
   <div class="fouth">
-    <cardTitle title="旅游区动态" type="wight" />
-    <div class="more">更多<img src="../../../assets/image/right_b.png" alt=""></div>
+    <cardTitle :title="$t('common.nav_title4')" type="wight" />
+    <div class="more" @click="goToMore">{{ $t('common.more') }}<img src="../../../assets/image/right_b.png" alt=""></div>
     <div class="content">
       <div class="nav">
-        <div :class="['item', selectIndex === index ? 'active' : '']" v-for="(item, index) in navList" :key="index">{{
-          item
-        }}</div>
+        <div :class="['item', selectId === item.id ? 'active' : '']" v-for="item in navList" :key="item.id"
+          @click="getSelectData(item.id)">
+          {{ item.name }}
+        </div>
       </div>
       <div class="cardWrap">
         <el-row :gutter="50" class="pc">
-          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-for="(item, index) in 4">
-            <div class="cardItem" :style="{ marginTop: index > 1 ? '50px' : '' }">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-for="(item, index) in articleList" :key="item.id">
+            <div class="cardItem" :style="{ marginTop: index > 1 ? '50px' : '' }" @click="goToDetail(item.id)">
               <div class="leftTime">
-                <div class="month">07-25</div>
-                <div class="year">2023</div>
+                <div class="month">{{ item.createTime | formatMonth }}</div>
+                <div class="year">{{ item.createTime | formatYear }}</div>
               </div>
               <div class="info">
-                <div class="title">习近平:在第+四届全国人民代表大会第表大会一次会议上的讲话四届全国人民代表大会第表大会一次会议上的讲话四届全国人民代表大会第表大会一次会议上的讲话</div>
-                <div class="desc">江苏盐城国家级珍禽自然保护区，地处江苏中部沿海，是我国最大的滩涂湿地保护</div>
+                <div class="title">{{ item.title }}</div>
+                <div class="desc">{{ item.introduction }}</div>
               </div>
             </div>
           </el-col>
         </el-row>
         <el-row :gutter="50" class="mobile">
-          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-for="(item, index) in 2">
-            <div class="cardItem" :style="{ marginTop: index > 0 ? '25px' : '' }">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-for="(item, index) in articleList.slice(0, 2)"
+            :key="item.id">
+            <div class="cardItem" :style="{ marginTop: index > 0 ? '25px' : '' }" @click="goToDetail(item.id)">
               <div class="leftTime">
-                <div class="month">07-25</div>
-                <div class="year">2023</div>
+                <div class="month">{{ item.createTime | formatMonth }}</div>
+                <div class="year">{{ item.createTime | formatYear }}</div>
               </div>
               <div class="info">
-                <div class="title">习近平:在第+四届全国人民代表大会第表大会一次会议上的讲话</div>
-                <div class="desc">江苏盐城国家级珍禽自然保护区，地处江苏中部沿海，是我国最大的滩涂湿地保护</div>
+                <div class="title">{{ item.title }}</div>
+                <div class="desc">{{ item.introduction }}</div>
               </div>
             </div>
           </el-col>
@@ -43,18 +45,67 @@
 </template>
 
 <script>
+import { getArticleList, getData } from '../../../api';
 import cardTitle from './cardTitle.vue'
+import dayjs from 'dayjs'
 export default {
   components: { cardTitle },
   data () {
     return {
-      navList: [
-        '通知公告',
-        '新闻咨询',
-        '主题活动',
-        '专题报道',
-      ],
-      selectIndex: 0
+      selectId: 0,
+      navList: [],
+      articleList: [],
+      navId: 0
+    }
+  },
+  created () {
+    this.getTwoData()
+  },
+  filters: {
+    formatMonth (val) {
+      if (!val) return ''
+      return dayjs(val).format('MM-DD')
+    },
+    formatYear (val) {
+      if (!val) return ''
+      return dayjs(val).year()
+    }
+  },
+  methods: {
+    goToMore () {
+      this.$router.push({
+        path: '/list',
+        query: { code: 'ly_lm_lyqdt', id: this.navId }
+      })
+    },
+    /* 旅游区动态 */
+    async getTwoData () {
+      const res = await getData({ code: 'ly_lm_lyqdt' })
+      if (res.code === 0) {
+        this.navList = res.data.list
+        this.selectId = res.data.list[0].id
+        this.navId = res.data.id
+        this.getArticle(this.selectId)
+      }
+    },
+    /* 获取文章列表 */
+    async getArticle (id) {
+      const res = await getArticleList({ columnId: id, pageSize: 4, pageNum: 1 })
+      if (res.code === 0) {
+        this.articleList = res.data.rows
+      }
+    },
+    getSelectData (id) {
+      this.selectId = id
+      this.getArticle(id)
+    },
+    goToDetail (id) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          id
+        }
+      })
     }
   }
 }
@@ -184,6 +235,7 @@ export default {
     justify-content: center;
     position: absolute;
     cursor: pointer;
+
     img {
       width: 28px;
       margin-left: 5px;

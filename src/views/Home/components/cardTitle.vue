@@ -15,6 +15,10 @@ export default {
     type: {
       type: String,
       default: 'blue'
+    },
+    top: {
+      type: Number,
+      default: 0
     }
   }
 }

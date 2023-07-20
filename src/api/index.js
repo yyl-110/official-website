@@ -27,3 +27,9 @@ export const getLeftNavList = (params) => get('/webapi/websitenavigation/selectL
  * @return {*}
 */
 export const getArticleList = (params) => get('/webapi/websitenavigation/selectArticleList', params);
+/**
+ * 获取文章详情
+ * @param {*} params
+ * @return {*}
+*/
+export const getArticleDetail = (params) => get('/webapi/websitenavigation/queryArticlebyId', params);

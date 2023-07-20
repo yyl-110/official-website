@@ -5,10 +5,10 @@
         <one />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-two">
-        <two />
+        <two :articelDetail="articelDetail" @goToList="goToList" />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-three">
-        <three />
+        <three :attractions="attractions" />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-fouth">
         <fouth />
@@ -20,10 +20,10 @@
         <six />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-siven">
-        <siven />
+        <siven :picList="picList" />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-eight">
-        <eight />
+        <eight :xnData="xnData" />
       </swiper-slide>
     </swiper>
   </div>
@@ -39,6 +39,7 @@ import fouth from "./components/fouth.vue";
 import five from "./components/five.vue";
 import six from "./components/six.vue";
 import siven from "./components/siven.vue";
+import { getArticleDetail, getArticleList, getData } from "../../api";
 export default {
   name: "HelloWorld",
   components: {
@@ -84,7 +85,12 @@ export default {
             this.$store.commit('setActive', swiper.activeIndex)
           }
         }
-      }
+      },
+      articelDetail: {}, // 景区概况
+      attractions: [],
+      pageData: [],
+      picList: [],
+      xnData: []
     };
   },
   // 如果你需要得到当前的swiper对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的swiper对象，同时notNextTick必须为true
@@ -94,10 +100,58 @@ export default {
     }
   },
   created () {
+    this.getOneData()
   },
   mounted () {
   },
   methods: {
+    /* 页面跳转 */
+    goToList (params) {
+      const { subId, type } = params
+      const pageData = this.pageData[type - 1]
+      this.$router.push({
+        path: '/list',
+        query: {
+          code: pageData.code,
+          id: pageData.id
+        }
+      })
+    },
+    /* 景区概况 */
+    async getOneData () {
+      const res = await getData({ code: 'ly_lm_zjddh' })
+      this.$set(this.pageData, 0, { code: res.data.code, id: res.data.id })
+      if (res.data.list.length) {
+        const obj1 = res.data.list.find(i => i.name === '景区概括') || {}
+        const obj2 = res.data.list.find(i => i.name === '景点介绍') || {}
+        const obj3 = res.data.list.find(i => i.name === '景区图片') || {}
+        const obj4 = res.data.list.find(i => i.name === '虚拟游') || {}
+        /* 景区概括 */
+        getArticleList({ columnId: obj1.id, pageSize: 1, pageNum: 10 }).then(list => {
+          if (list.code === 0) {
+            this.articelDetail = list.data.rows[0]
+          }
+        })
+        /* 景点介绍 */
+        getArticleList({ columnId: obj2.id, pageSize: 20, pageNum: 1 }).then(introList => {
+          if (introList.code === 0) {
+            this.attractions = introList.data.rows
+          }
+        })
+        /* 景区图片 */
+        getArticleList({ columnId: obj3.id, pageSize: 20, pageNum: 1 }).then(picData => {
+          if (picData.code === 0) {
+            this.picList = picData.data.rows
+          }
+        })
+        /* 虚拟 */
+        getArticleList({ columnId: obj4.id, pageSize: 20, pageNum: 1 }).then(xnyData => {
+          if (xnyData.code === 0) {
+            this.xnData = xnyData.data.rows
+          }
+        })
+      }
+    },
   }
 };
 </script>
@@ -200,7 +254,7 @@ export default {
 }
 
 .slide-two {
-  background: url('../../assets/image/图层\ 623@2x.png') no-repeat center;
+  background: url('../../assets/image/bg_bl.png') no-repeat center;
   background-size: contain;
 }
 
@@ -210,7 +264,7 @@ export default {
 }
 
 .slide-fouth {
-  background: url('../../assets/image/矩形\ 696@2x.png') no-repeat center;
+  background: url('../../assets/image/bg_ddh.png') no-repeat center;
   background-size: cover;
 }
 

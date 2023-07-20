@@ -1,27 +1,31 @@
 <template>
   <div class="five">
-    <CardTitle title="丹顶鹤文化" />
-    <div class="more">更多<img src="../../../assets/image/right.png" alt=""></div>
+    <CardTitle :title="$t('common.nav_title5')" />
+    <div class="more" @click="goToMore">{{ $t('common.more') }}<img src="../../../assets/image/right.png" alt=""></div>
     <div class="content">
       <div class="nav">
-        <div class="item active">科普小天地</div>
-        <div class="item">一个真实的故事</div>
+        <div :class="['item', selectId === item.id ? 'active' : '']" v-for="item in navList" :key="item.id"
+          @click="getSelectData(item.id)">{{ item.name }}
+        </div>
       </div>
       <div class="cardList">
-        <div class="cardItem" v-for="item in 3">
-          <div class="title">[丹顶鹤]中]鹤将北归 丹顶鹤将于二月中下旬 从江苏盐城“返乡”</div>
-          <div class="introduction">央广网盐城2月2日消 (记者于妹妹) “人与自然存”“诗与远方，这才是生活“”人与自然共存”“诗与远方，这才是生活”慢直播的画</div>
-          <div class="bot">
-            <div class="line"></div>
-            <div class="date">
-              <div class="day">18</div>
-              <div class="year">
-                <span>2023.07</span>
-                <img src="../../../assets/image/right_b.png" alt="">
+        <template v-if="articleList.length > 0">
+          <div class="cardItem" v-for="item in articleList" :key="item.id" @click="goToDetail(item.id)">
+            <div class="title">{{ item.title }}</div>
+            <div class="introduction">{{ item.introduction }}</div>
+            <div class="bot">
+              <div class="line"></div>
+              <div class="date">
+                <div class="day">{{ item.createTime | formatDay }}</div>
+                <div class="year">
+                  <span>{{ item.createTime | formatMonth }}</span>
+                  <img src="../../../assets/image/right_b.png" alt="">
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </template>
+        <div class="empty" v-else>暂无数据～</div>
       </div>
     </div>
 
@@ -29,9 +33,69 @@
 </template>
 
 <script>
+import { getArticleList, getData } from '../../../api';
 import CardTitle from './cardTitle.vue';
+import dayjs from 'dayjs'
 export default {
-  components: { CardTitle }
+  components: { CardTitle },
+  data () {
+    return {
+      selectId: 0,
+      navList: [],
+      articleList: [],
+      navId: 0
+    }
+  },
+  created () {
+    this.getTwoData()
+  },
+  filters: {
+    formatMonth (val) {
+      if (!val) return ''
+      return dayjs(val).format('YYYY-MM')
+    },
+    formatDay (val) {
+      if (!val) return ''
+      return dayjs(val).day()
+    }
+  },
+  methods: {
+    goToMore () {
+      this.$router.push({
+        path: '/list',
+        query: { code: 'ly_lm_ddhwh', id: this.navId }
+      })
+    },
+    /* 丹顶鹤文化 */
+    async getTwoData () {
+      const res = await getData({ code: 'ly_lm_ddhwh' })
+      if (res.code === 0) {
+        this.navList = res.data.list
+        this.selectId = res.data.list[0].id
+        this.navId = res.data.id
+        this.getArticle(this.selectId)
+      }
+    },
+    /* 获取文章列表 */
+    async getArticle (id) {
+      const res = await getArticleList({ columnId: id, pageSize: 3, pageNum: 1 })
+      if (res.code === 0) {
+        this.articleList = res.data.rows
+      }
+    },
+    getSelectData (id) {
+      this.selectId = id
+      this.getArticle(id)
+    },
+    goToDetail (id) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          id
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -40,6 +104,15 @@ export default {
   width: 100%;
   height: 100%;
   padding-top: 80px;
+
+  .empty {
+    padding: 40px 0;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   /* mobile */
   @media screen and (max-width: 768px) {
@@ -70,6 +143,7 @@ export default {
               width: 99%;
               height: 1px;
               background-color: #999;
+              opacity: 0.3;
               margin: 8px auto;
             }
 
@@ -183,7 +257,6 @@ export default {
 
       .cardList {
         width: 100%;
-        height: 100%;
         transition: all .2s;
         display: flex;
         align-items: center;
@@ -325,4 +398,5 @@ export default {
       margin-left: 5px;
     }
   }
-}</style>
+}
+</style>

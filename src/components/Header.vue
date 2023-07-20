@@ -32,6 +32,7 @@
 
 <script>
 import { getNavList } from '../api';
+import i18n from "@/i18n" //根据项目对应真实路径
 export default {
 
   data () {
@@ -87,7 +88,14 @@ export default {
     handleSubSelect (key, index, id, subCode) {
       /* 中英文切换 */
       if (key === 'ly_lm_wzyy') {
-
+        if (subCode === 'ly_lm_lyfw_zwwz') {
+          i18n.locale = "zh" //
+          localStorage.setItem('language', "zh")//在localStorage中存入设置
+        }
+        if (subCode === 'ly_lm_lyfw_ywwz') {
+          i18n.locale = "en" //
+          localStorage.setItem('language', "en")//在localStorage中存入设置
+        }
         return
       }
       this.defaultActive = key
@@ -109,6 +117,7 @@ export default {
       const res = await getNavList({ code: 'ly_lm_dbdh' })
       if (res.code === 0) {
         this.navList = res.data
+        this.$store.commit('setNavList', res.data)
 
         const navCode = this.$route.query.code
         let navIndex = localStorage.getItem('navIndex') || 0

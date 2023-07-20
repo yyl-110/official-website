@@ -57,6 +57,10 @@ export function get(url, params) {
         params: params,
       })
       .then((res) => {
+        const {code, msg} = res.data || {};
+        if (code !== 0) {
+          Message.error(msg);
+        }
         resolve(res.data);
       })
       .catch((err) => {

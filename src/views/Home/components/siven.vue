@@ -1,12 +1,13 @@
 <template>
   <div class="siven">
-    <CardTitle title="图片鉴赏" />
+    <!-- 图片鉴赏 -->
+    <CardTitle :title="$t('common.nav_title7')" />
     <div class="content">
       <el-carousel class="carousel" :autoplay="false">
-        <el-carousel-item v-for="item in 4" :key="item">
+        <el-carousel-item v-for="(item, index) in arrList" :key="index">
           <div class="imgList">
-            <div class="imgwrap" v-for="item in 5">
-              <img :src="require(`../../../assets/image/p${item}.png`)" alt="" class="img">
+            <div class="imgwrap" v-for="val in item" :key="val.id">
+              <img :src="val.imgUrl | imgFilter" alt="" class="img">
             </div>
           </div>
         </el-carousel-item>
@@ -18,7 +19,20 @@
 <script>
 import CardTitle from './cardTitle.vue';
 export default {
-  components: { CardTitle }
+  components: { CardTitle },
+  props: {
+    picList: { type: Array, default: () => [] }
+  },
+  filters: {
+    imgFilter (val) {
+      return process.env.VUE_APP_PUBLIC_URL + val
+    }
+  },
+  computed: {
+    arrList () {
+      return _.chunk(this.picList, 5);
+    }
+  }
 }
 </script>
 

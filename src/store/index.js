@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    homeActiveIndex: -1
+    homeActiveIndex: -1,
+    homeNavList:[]
   },
   mutations: {
     setActive(state,data) {
       state.homeActiveIndex = data
+    },
+    setNavList(state,data) {
+      state.homeNavList = data
     }
   },
   actions: {

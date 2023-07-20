@@ -25,23 +25,23 @@
         </div>
         <div class="lists">
           <div style="flex: 1 1 0%;">
-            <div class="detail_list" v-for="item in articleList" v-if="linkType === '2' && articleList.length">
+            <div class="detail_list" v-for="item in articleList" v-if="linkType === '2' && articleList.length"
+              @click="goToDetail(item.id)">
               <div class="title">
                 <span class="dot"></span>
-                <span class="list_content">招募 | 自然教育师学员</span>
+                <span class="list_content">{{ item.title }}</span>
               </div>
-              <div class="date">2023-07-06</div>
+              <div class="date">{{ item.createTime }}</div>
             </div>
             <!-- 一条数据 -->
             <div class="detail" v-if="linkType === '3' && articleList.length">
-              <div class="title">基地介绍</div>
+              <div class="title">{{ articleList[0].title }}</div>
               <div class="info">
-                <div class="pub_date"><span>发布日期: 2023-07-06 14:09:26</span></div>
-                <div class="source"><span>来源: 研发部门</span></div>
-                <div class="views"><span>访问次数: 252</span></div>
+                <div class="pub_date"><span>发布日期: {{ articleList[0].createTime }}</span></div>
+                <div class="source"><span>来源: {{ articleList[0].deptName }}</span></div>
+                <div class="views"><span>访问次数: {{ articleList[0].hotpots || 0 }}</span></div>
               </div>
-              <div class="img_txt">
-                p盐城珍禽保护区位于中国东部沿海，是东亚——澳大利西亚候鸟迁徙路线上重要的栖息地，享有“国家重要湿地基因库”之称。该保护区重点保护以丹顶鹤为代表的湿地珍稀野生动物及其赖以生存的滨海湿地生态系统。
+              <div class="img_txt" v-html="pageContent">
               </div>
             </div>
             <div class="empty" v-if="articleList.length === 0">
@@ -49,7 +49,7 @@
             </div>
           </div>
         </div>
-        <div class="pagination">
+        <div class="pagination" v-if="linkType === '2'">
           <el-pagination background layout="prev, pager, next,sizes,total" :total="50" class="mt-4"
             :page-sizes="[10, 20, 30, 40]" :pager-count="3" />
         </div>
@@ -73,10 +73,15 @@ export default {
       subTitle: '',
       id: '',
       navList: [],
-      pageSize: 1,
-      pageNum: 5,
+      pageSize: 5,
+      pageNum: 1,
       articleList: [],
       linkType: '2' // 右侧内容的形式 2 列表 3 文章 4 表格 7 视频列表
+    }
+  },
+  computed: {
+    pageContent(){
+      return this.articleList[0].content.replace('src="', `src="${process.env.VUE_APP_PUBLIC_URL}`)
     }
   },
   created () {
@@ -100,10 +105,10 @@ export default {
           if (selectIndex > -1) {
             this.activeIndex = selectIndex
             this.getList(this.navList[selectIndex].id)
-            this.linkType =this.navList[selectIndex].linkType
+            this.linkType = this.navList[selectIndex].linkType
           } else {
             this.getList(this.navList[0].id)
-            this.linkType =this.navList[0].linkType
+            this.linkType = this.navList[0].linkType
           }
         }
       }
@@ -122,6 +127,16 @@ export default {
     selectTab (index, tabId) {
       this.activeIndex = index
       this.getList(tabId)
+    },
+    goToDetail (id) {
+      const routeUrl = this.$router.resolve({
+
+        path: "/detail",
+
+        query: { id },
+
+      });
+      window.open(routeUrl.href, "_blank");
     }
   },
   watch: {
@@ -130,7 +145,7 @@ export default {
       // this.mainTitle = this.$route.query.mainTitle
       this.id = this.$route.query.id
       this.activeIndex = 0
-      this.pageSize = 1
+      this.pageSize = 5
       this.subTitle = ''
       this.mainTitle = ''
       this.navList = []
@@ -211,7 +226,7 @@ export default {
 
   .content {
     display: flex;
-    padding: 25px 260px 0;
+    padding: 25px 220px 0;
     align-items: flex-start;
     justify-content: space-between;
 
@@ -293,6 +308,7 @@ export default {
         .img_txt {
           font-size: 16px;
           color: #333;
+          text-indent: 2em;
         }
 
         .title {
@@ -319,6 +335,10 @@ export default {
           font-size: 14px;
           padding: 0 100px;
           line-height: 60px;
+
+          div {
+            white-space: nowrap;
+          }
         }
       }
 
@@ -387,6 +407,7 @@ export default {
             font-size: 16px;
             color: #999;
             display: inline-block;
+            white-space: nowrap;
           }
 
           .title {

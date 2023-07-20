@@ -4,6 +4,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store';
 import axios from 'axios'
+//导入配置好的国际化语言包
+import i18n from './i18n' // Internationalization
 import './assets/scss/index.scss'
 
 import ElementUI from 'element-ui';
@@ -27,6 +29,7 @@ Vue.prototype.$http = axios
 Vue.prototype.imgserver = 'http://shkjgw.shkjem.com/'
 
 new Vue({
+  i18n, // 注入 配置好的国际化语言配置
   router,
   store,
   render: h => h(App)
