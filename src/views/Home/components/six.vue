@@ -44,6 +44,7 @@ export default {
       }
     },
     goToList (id) {
+      this.$store.commit('setActiveNavIndex', 4)
       this.$router.push({
         path: '/list',
         query: {

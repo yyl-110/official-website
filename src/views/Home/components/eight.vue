@@ -2,7 +2,6 @@
   <div class="eight">
     <CardTitle :title="$t('common.nav_title8')" />
     <div v-html="pageData" class="wrap"></div>
-    <!-- <img src="../../../assets/image/map.png" alt="" class="map"> -->
     <Footer />
   </div>
 </template>
@@ -40,18 +39,20 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   padding-bottom: 240px;
   overflow: hidden;
+  padding-top: 200px;
 
   .wrap {
-    height: 450px !important;
-    width: auto !important;
+    // height: 450px !important;
+    width: 1400px !important;
+    height: auto;
     margin: 0 auto;
     overflow: hidden;
    ::v-deep p {
       img {
-        object-fit: cover !important;
+        object-fit: contain !important;
         height: 100%;
       }
     }

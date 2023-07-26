@@ -10,7 +10,7 @@
       <p class="text">
         {{ articelDetail.introduction }}
       </p>
-      <div class="btn">{{ $t('common.more') }}<img src="../../../assets/image/right.png" alt=""></div>
+      <div class="btn" @click="goTo">{{ $t('common.more') }}<img src="../../../assets/image/right.png" alt=""></div>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@ export default {
   },
   methods: {
     goTo () {
+      this.$store.commit('setActiveNavIndex', 1)
       this.$emit('goToList', { subId: this.articelDetail.id, type: 1 })
     }
   }

@@ -12,13 +12,7 @@
     <div class="qrcode">
       <div class="item">
         <span>微信公众号</span>
-        <img src="" alt="">
-        <span>了解更多</span>
-      </div>
-      <div class="item">
-        <span>下载APP</span>
-        <img src="" alt="">
-        <span>更多信息</span>
+        <img src="@/assets/image/qrcode.png" alt="">
       </div>
     </div>
   </div>
@@ -37,7 +31,6 @@ export default {
     padding: 0 160px;
 
     .qrcode {
-      width: 301px;
       padding: 0 30px;
 
 
@@ -61,6 +54,11 @@ export default {
 
     .left {
       p {
+        span {
+          &:not(:first-child) {
+            margin-left: 54px;
+          }
+        }
 
         &:not(:first-child) {
           margin-top: 33px;
@@ -120,36 +118,43 @@ export default {
   left: 0;
   bottom: 0;
 
-  .left {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 
-    p {
-      font-size: 16px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      color: #FFFFFF;
-      opacity: 0.6;
-    }
 
-  }
 
-  .qrcode {
+}
 
-    height: 200px;
-    background-color: rgba(97, 97, 97, .3);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.footer .left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-    .item {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: center;
 
-    }
-  }
+
+}
+
+.footer .left p {
+  font-size: 16px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #FFFFFF;
+  opacity: 0.6;
+}
+
+.footer .qrcode {
+  height: 200px;
+  background-color: rgba(97, 97, 97, .3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+}
+
+.qrcode .item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
 }
 </style>

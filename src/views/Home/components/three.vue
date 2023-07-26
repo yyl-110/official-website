@@ -4,14 +4,14 @@
     <el-carousel class="carousel" :autoplay="false">
       <el-carousel-item v-for="(item, index) in arrList" :key="index">
         <div class="imgList">
-          <div class="imgwrap" v-for="val in item" :key="val.id">
+          <div class="imgwrap" v-for="val in item" :key="val.id" @click="goToDetail(val.id)">
             <img :src="val.imgUrl | imgFilter" alt="" class="img">
             <div class="content">
               <h1>{{ val.title }}</h1>
               <div class="info">
                 {{ val.introduction }}
               </div>
-              <div class="more" @click="goToDetail(val.id)">
+              <div class="more">
                 {{ $t('common.more') }} <img src="../../../assets/image/right.png" alt="">
               </div>
             </div>
@@ -45,12 +45,13 @@ export default {
   },
   methods: {
     goToDetail (id) {
-      this.$router.push({
+      const routeUrl = this.$router.resolve({
         path: '/detail',
         query: {
           id
         }
       })
+      window.open(routeUrl.href, "_blank");
     }
   }
 }

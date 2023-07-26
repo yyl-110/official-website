@@ -3,15 +3,16 @@
     <div class="intron">
       <div class="left">
         <img src="../../../assets/image/gg.png" alt="">
-        <span>{{$t('common.nav_title1')}}</span>
+        <span>{{ $t('common.nav_title1') }}</span>
       </div>
       <div class="line"></div>
       <div class="list">
         <vue-seamless-scroll v-if="tempArray.length >= 1" :data="tempArray" class="seamless-warp"
           :class-option="defaultOption">
-          <div class="info" v-for="item in tempArray">
-            <div class="content">今日正常接待入今日正常接待入园今日正常接待入园今日正常接待入园今日正常接待入园今日正常接待入园今日正常接待入园园今日正常接待入今日正常接待入园今日正常接待入园今日正常接待入园今日正常接待入园今日正常接待入园今日正常接待入园园</div>
-            <div class="time">2023.06-20</div>
+          <div class="info" v-for="item in tempArray" :key="item.noticeId" @click="goTo(item)">
+            <div class="content" v-html="item.noticeTitle">
+            </div>
+            <div class="time">{{ item.createTime }}</div>
           </div>
         </vue-seamless-scroll>
       </div>
@@ -21,6 +22,7 @@
 
 <script>
 import vueSeamlessScroll from 'vue-seamless-scroll'
+import { getNoticeList } from '../../../api'
 export default {
   components: {
 
@@ -29,8 +31,11 @@ export default {
 
   data () {
     return {
-      tempArray: [1,1,1]
+      tempArray: [],
     }
+  },
+  created () {
+    this.getNotice()
   },
 
   computed: {
@@ -48,6 +53,23 @@ export default {
     }
 
   },
+  methods: {
+    goTo (item) {
+      const routeUrl = this.$router.resolve({
+        path: '/notice',
+        query: {
+          id: item.noticeId
+        }
+      })
+      window.open(routeUrl.href, "_blank");
+    },
+    async getNotice () {
+      const res = await getNoticeList()
+      if (res.code === 0) {
+        this.tempArray = res.data
+      }
+    }
+  }
 
 }
 </script>
@@ -57,6 +79,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 /* 移动端 */
 @media screen and (max-width: 1023px) {
   .one {

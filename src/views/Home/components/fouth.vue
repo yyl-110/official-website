@@ -73,6 +73,7 @@ export default {
   },
   methods: {
     goToMore () {
+      this.$store.commit('setActiveNavIndex', 2)
       this.$router.push({
         path: '/list',
         query: { code: 'ly_lm_lyqdt', id: this.navId }
@@ -100,12 +101,13 @@ export default {
       this.getArticle(id)
     },
     goToDetail (id) {
-      this.$router.push({
+      const url = this.$router.resolve({
         path: '/detail',
         query: {
           id
         }
       })
+      window.open(url.href, "_blank");
     }
   }
 }

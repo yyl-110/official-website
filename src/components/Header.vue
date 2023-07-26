@@ -1,7 +1,7 @@
 <template>
   <header :class="[activeIndex === 0 ? 'active' : '']">
     <div class="logo">
-      <img :src="activeIndex === 0 ? require('../assets/image/logo.png') : require('../assets/image/logo2.png')" alt />
+      <img src="../assets/image/logo.png" alt />
     </div>
     <div class="nav_header">
       <div class="tab">
@@ -49,7 +49,8 @@ export default {
         { name: '旅游服务', value: 'ly_lm_lyfw', },
         { name: '联系我们', value: 'ly_lm_lxwm', },
         { name: '网站语言', value: 'ly_lm_wzyy', },
-      ]
+      ],
+      id: ''
     }
   },
   created () {
@@ -62,10 +63,18 @@ export default {
   computed: {
     homeActiveIndex () {
       return this.$store.state.homeActiveIndex
+    },
+    activeNavKey () {
+      const index = this.$store.state.activeNavIndex
+      if (this.navList.length) {
+        return this.navList[index].code
+      }
+      return 'ly_lm_wzsy'
     }
   },
   methods: {
     handleSelect (key, index, id) {
+      this.id = id
       /* 中英文切换 */
       if (key === 'ly_lm_wzyy') {
         return
@@ -78,7 +87,8 @@ export default {
         path = `/list?code=${key}&id=${id}`
       }
       try {
-        localStorage.setItem('navIndex', this.navSignList.findIndex(i => i.value === key))
+        this.$store.commit('setActiveNavIndex', this.navSignList.findIndex(i => i.value === key))
+        // localStorage.setItem('navIndex', this.navSignList.findIndex(i => i.value === key))
       } catch (error) {
         console.log('error:', error)
       }
@@ -106,7 +116,7 @@ export default {
         path = `/list?code=${key}&id=${id}`
       }
       try {
-        localStorage.setItem('navIndex', this.navSignList.findIndex(i => i.value === key))
+        this.$store.commit('setActiveNavIndex', this.navSignList.findIndex(i => i.value === key))
       } catch (error) {
         console.log('error:', error)
       }
@@ -134,6 +144,9 @@ export default {
     homeActiveIndex (newValue) {
       this.activeIndex = newValue;
       // 在这里可以根据新的store数据进行相应的处理
+    },
+    activeNavKey (val) {
+      this.defaultActive = val
     }
   }
 

@@ -1,12 +1,12 @@
 <template>
   <div class="common_banner">
     <div class="mask"></div>
-    <div class="app_introduce">
+    <!-- <div class="app_introduce">
       <div class="title">江苏盐城湿地珍禽自然保护区科普宣教</div>
       <div class="title_en">SCIENCE POPULARIZATION AND EDUCATION OF YANCHENG WETLAND RARE BIRD NATURE RESERVE IN JIANGSU
         PROVINCE</div>
       <div class="aim"><span>——</span> <span>用真心服务于自然科学爱好者</span></div>
-    </div>
+    </div> -->
   </div>
 </template>
 
