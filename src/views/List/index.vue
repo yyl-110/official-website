@@ -199,7 +199,7 @@ export default {
       })
     },
     close () {
-      window.close()
+      this.$router.push('/')
     },
   },
   watch: {

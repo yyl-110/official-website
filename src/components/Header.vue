@@ -1,7 +1,7 @@
 <template>
   <header :class="[activeIndex === 0 ? 'active' : '']">
     <div class="logo">
-      <img src="../assets/image/logo.png" alt />
+      <img src="../assets/image/logo2.png" alt />
     </div>
     <div class="nav_header">
       <div class="tab">
@@ -372,7 +372,7 @@ header {
 
     img {
       width: 100%;
-      height: 100%;
+      height: auto;
     }
   }
 }

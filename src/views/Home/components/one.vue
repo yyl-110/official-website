@@ -1,5 +1,10 @@
 <template>
   <div class="one">
+    <el-carousel class="carousel" height="100%">
+      <el-carousel-item v-for="item in bannerList" :key="item.id">
+        <img :src="item.imgUrl | imgFilter" alt="">
+      </el-carousel-item>
+    </el-carousel>
     <div class="intron">
       <div class="left">
         <img src="../../../assets/image/gg.png" alt="">
@@ -27,6 +32,17 @@ export default {
   components: {
 
     vueSeamlessScroll
+  },
+  filters: {
+    imgFilter (val) {
+      return process.env.VUE_APP_PUBLIC_URL + val
+    }
+  },
+  props: {
+    bannerList: {
+      type: Array,
+      default: () => []
+    }
   },
 
   data () {
@@ -75,9 +91,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep.el-carousel__container {
+  height: 100%;
+}
 .one {
   width: 100%;
   height: 100%;
+  position: relative;
+  .carousel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    .el-carousel__container {
+      height: 100%;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 
 /* 移动端 */

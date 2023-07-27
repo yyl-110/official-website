@@ -1,17 +1,59 @@
 <template>
   <div class="common_banner">
+    <el-carousel class="carousel" height="100%">
+      <el-carousel-item v-for="item in (bannerList.length ? bannerList : list)" :key="item.id">
+        <img :src="item.imgUrl | imgFilter" alt="">
+      </el-carousel-item>
+    </el-carousel>
     <div class="mask"></div>
-    <!-- <div class="app_introduce">
-      <div class="title">江苏盐城湿地珍禽自然保护区科普宣教</div>
-      <div class="title_en">SCIENCE POPULARIZATION AND EDUCATION OF YANCHENG WETLAND RARE BIRD NATURE RESERVE IN JIANGSU
-        PROVINCE</div>
-      <div class="aim"><span>——</span> <span>用真心服务于自然科学爱好者</span></div>
-    </div> -->
   </div>
 </template>
 
 <script>
+import { getData } from '../api'
+
 export default {
+  data () {
+    return {
+      list: []
+    }
+  },
+  filters: {
+    imgFilter (val) {
+      return process.env.VUE_APP_PUBLIC_URL + val
+    }
+  },
+  computed: {
+    bannerList () {
+      let bannerList = []
+      try {
+        bannerList = JSON.parse(localStorage.getItem('bannerList'))
+      } catch (error) {
+        bannerList = []
+      }
+      return bannerList || []
+    }
+  },
+  methods: {
+    async getBanner () {
+      const res = await getData({ code: 'ly_lm_dbdh' })
+      if (res.code === 0) {
+        this.list = res.data.list
+        localStorage.setItem('bannerList', JSON.stringify(this.list))
+      }
+    },
+  },
+  created () {
+    try {
+      const list = JSON.parse(localStorage.getItem('bannerList')) || []
+      if (list.length === 0) {
+        this.getBanner()
+      }
+    } catch (error) {
+      this.getBanner()
+      console.log('error:', error)
+    }
+  },
 
 }
 </script>
@@ -50,9 +92,11 @@ export default {
     }
   }
 }
+
 @media screen and (max-width: 1023px) {
   .common_banner {
     height: 260px;
+
     .app_introduce {
       position: absolute;
       top: 60px;
@@ -83,19 +127,36 @@ export default {
 }
 
 .common_banner {
-    background: url('../assets/image/main-bg2.png') no-repeat bottom;
-    background-size: cover;
-    position: relative;
+  background-size: cover;
+  position: relative;
 
+  .carousel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: -1;
 
-    .mask {
-      position: absolute;
+    .el-carousel__container {
+      height: 100%;
+    }
+
+    img {
       width: 100%;
       height: 100%;
-      top: 0;
-      left: 0;
-      background-color: rgba(0, 76, 43, .1);
-      z-index: 3;
     }
   }
+
+
+  .mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 76, 43, .1);
+    z-index: 3;
+  }
+}
 </style>

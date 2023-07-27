@@ -2,7 +2,7 @@
   <div class="home">
     <swiper id="swiperBox" v-bind:options="swiperOption" ref="mySwiper">
       <swiper-slide class="swiper-slide slide-one">
-        <one />
+        <one :bannerList="bannerList" />
       </swiper-slide>
       <swiper-slide class="swiper-slide slide-two">
         <two :articelDetail="articelDetail" @goToList="goToList" />
@@ -90,7 +90,8 @@ export default {
       attractions: [],
       pageData: [],
       picList: [],
-      xnData: []
+      xnData: [],
+      bannerList: []
     };
   },
   // 如果你需要得到当前的swiper对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的swiper对象，同时notNextTick必须为true
@@ -100,6 +101,7 @@ export default {
     }
   },
   created () {
+    this.getBanner()
     this.getOneData()
   },
   mounted () {
@@ -116,6 +118,13 @@ export default {
           id: pageData.id
         }
       })
+    },
+    async getBanner () {
+      const res = await getData({ code: 'ly_lm_dbdh' })
+      if (res.code === 0) {
+        this.bannerList = res.data.list
+        localStorage.setItem('bannerList', JSON.stringify(this.bannerList))
+      }
     },
     /* 景区概况 */
     async getOneData () {
@@ -249,7 +258,7 @@ export default {
 //   background: seashell;
 // }
 .slide-one {
-  background: url('../../assets/image/main-bg1.png') no-repeat center;
+  // background: url('../../assets/image/main-bg1.png') no-repeat center;
   background-size: cover;
 }
 

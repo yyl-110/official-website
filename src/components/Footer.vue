@@ -7,7 +7,7 @@
         <span>预定热线:400-6066-333</span>
         <span>投诉电话: 400-6066-333</span>
       </p>
-      <p>地址:盐城市亭湖区..</p>
+      <p>地址:盐城市亭湖区黄尖镇兴农村委东</p>
     </div>
     <div class="qrcode">
       <div class="item">
