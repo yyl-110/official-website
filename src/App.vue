@@ -5,21 +5,22 @@
       <el-main>
         <router-view />
       </el-main>
+      <right-nav />
     </el-container>
   </div>
 </template>
 
 <script>
 import mainHeader from './components/Header.vue';
+import rightNav from './components/rightNav.vue';
 export default {
-  components: { mainHeader },
+  components: { mainHeader, rightNav },
   data () {
     return {
       router: true,
       isShow: false,
     };
-  },
-
+  }
 };
 </script>
 

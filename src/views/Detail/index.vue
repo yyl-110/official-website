@@ -3,29 +3,30 @@
     <common-banner />
     <div class="detail_wrap">
       <div class="breadcrumb bread">
-        <div class="right_bread"><span>当前位置：</span> <span style="" class="current_asideNav"><span @click="goTo"
-              style="cursor: pointer;">
-              {{ mainTitle }}
+        <div class="right_bread"><span>{{ $t('common.currentLocation') }}：</span> <span style=""
+            class="current_asideNav"><span @click="goTo" style="cursor: pointer;">
+              {{ $i18n.locale === 'zh' ? mainTitle : enMainTitle }}
             </span> <span class="arrow">&gt;</span> <span style="cursor: pointer;">
-              {{ subTitle }}
+              {{ $i18n.locale === 'zh' ? subTitle : enSubTitle }}
             </span></span></div>
       </div>
       <div class="content">
         <div id="print" style="width: 100%;">
-          <div class="title" style="height: 50px; text-align: center;">{{ pageData.title }}</div>
+          <div class="title" style="height: 50px; text-align: center;">{{ $i18n.locale === 'zh' ? pageData.title :
+            pageData.enTitle }}</div>
           <div class="info" style="display: flex;align-items: center;justify-content: space-around;">
-            <span class="pub_date"><span>发布日期: {{ pageData.createTime }}</span></span>
-            <sapn class="source"><span>来源: {{ pageData.deptName }}</span></sapn>
-            <span class="views"><span>访问次数: {{ pageData.hotpots }}</span></span>
+            <span class="pub_date"><span>{{ $t('common.releaseDate') }}: {{ pageData.createTime }}</span></span>
+            <sapn class="source"><span>{{ $t('common.source') }}: {{ pageData.deptName }}</span></sapn>
+            <span class="views"><span>{{ $t('common.visits') }}: {{ pageData.hotpots }}</span></span>
           </div>
           <div class="img_txt" v-html="pageContent"></div>
         </div>
         <div class="bottom_wrp" style="width: 100%;">
           <div class="bottom">
             <div class="print" @click="print"><i class="el-icon-printer" style="color: rgb(0, 133, 76);"></i> <span
-                class="txt">打印本页</span></div>
+                class="txt">{{ $t('common.print') }}</span></div>
             <div class="close" @click="close"><i class="el-icon-circle-close" style="color: rgb(228, 116, 112);"></i>
-              <span class="txt">关闭</span>
+              <span class="txt">{{ $t('common.close') }}</span>
             </div>
           </div>
         </div>
@@ -48,8 +49,9 @@ export default {
       navList: [],
       ids: [],
       mainTitle: '',
-      subTitle: ''
-
+      subTitle: '',
+      enMainTitle: '',
+      enSubTitle: ''
     }
   },
   computed: {
@@ -58,7 +60,8 @@ export default {
     },
     pageContent () {
       if (this.pageData.content) {
-        return this.pageData.content.replace('src="', `src="${process.env.VUE_APP_PUBLIC_URL}`)
+        const content = this.$i18n.locale === 'zh' ? this.pageData.content : this.pageData.enContent
+        return (content || '').replace('src="', `src="${process.env.VUE_APP_PUBLIC_URL}`)
       }
       return ''
     }
@@ -110,20 +113,22 @@ export default {
         const index = Number(localStorage.getItem('navIndex') || 0)
         const name = val[index].name
         this.mainTitle = name
-        setTimeout(() => {
-          const id = this.ids[1]
-          /* 网站首页 */
-          if (val[index].code === "ly_lm_wzsy") {
-            this.subTitle = this.pageData.title
-            return
-          }
-          const item = val[index].list.find(i => i.id === Number(id)) || {}
-          try {
-            this.subTitle = item.name
-          } catch (error) {
-            console.log('error:', error)
-          }
-        }, 300);
+        this.enMainTitle = val[index].enName,
+          setTimeout(() => {
+            const id = this.ids[1]
+            /* 网站首页 */
+            if (val[index].code === "ly_lm_wzsy") {
+              this.subTitle = this.pageData.title
+              this.enSubTitle = this.pageData.enTitle
+              return
+            }
+            const item = val[index].list.find(i => i.id === Number(id)) || {}
+            try {
+              this.subTitle = item.name
+            } catch (error) {
+              console.log('error:', error)
+            }
+          }, 300);
       },
       deep: true,
       immediate: true,

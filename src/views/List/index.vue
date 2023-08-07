@@ -3,24 +3,25 @@
     <common-banner />
     <div class="content">
       <div class="nav">
-        <div class="nav_title">{{ mainTitle }}</div>
+        <div class="nav_title">{{ $i18n.locale === 'zh' ? mainTitle : enMainTitle }}</div>
         <div class="line"></div>
         <div class="nav_list">
           <div :class="['nav_item', activeIndex === index ? 'active' : 'hover']" v-for="(item, index) in navList"
-            :key="item.id" @click="selectTab(index, item.id, item.linkType)">
+            :key="item.id" @click="selectTab(index, item.id, item.linkType, item)">
             <img src="../../assets/image/circle.png" alt="" class="circle">
-            <span>{{ item.name }}</span> <img src="../../assets/image/point.png" alt="" class="arrow">
+            <span>{{ $i18n.locale === 'zh' ? item.name : item.enName }}</span> <img src="../../assets/image/point.png"
+              alt="" class="arrow">
           </div>
         </div>
       </div>
       <div class="content_right">
         <div class="breadcrumb" v-if="linkType !== '3' && navList.length">
-          <div class="title">{{ mainTitle }}</div>
-          <div class="right_bread"><span>当前位置：</span> <span class="current_asideNav"><span style="cursor: pointer;"
-                @click="back">
-                {{ mainTitle }}
+          <div class="title">{{ $i18n.locale === 'zh' ? mainTitle : enMainTitle }}</div>
+          <div class="right_bread"><span>{{ $t('common.currentLocation') }}：</span> <span class="current_asideNav"><span
+                style="cursor: pointer;" @click="back">
+                {{ $i18n.locale === 'zh' ? mainTitle : enMainTitle }}
               </span> <span class="arrow">&gt;</span> <span style="cursor: pointer;">
-                {{ navList[activeIndex].name }}
+                {{ $i18n.locale === 'zh' ? navList[activeIndex].name : navList[activeIndex].enName }}
               </span></span></div>
         </div>
         <div class="lists">
@@ -29,17 +30,18 @@
               :key="item.id" @click="goToDetail(item.id)">
               <div class="title">
                 <span class="dot"></span>
-                <span class="list_content">{{ item.title }}</span>
+                <span class="list_content">{{ $i18n.locale === 'zh' ? item.title : item.enTitle }}</span>
               </div>
               <div class="date">{{ item.createTime }}</div>
             </div>
             <!-- 一条数据 -->
             <div class="detail" v-if="linkType === '3' && articleList.length">
-              <div class="title" style="text-align: center;">{{ articleList[0].title }}</div>
+              <div class="title" style="text-align: center;">{{ $i18n.locale === 'zh' ? articleList[0].title :
+                articleList[0].enTitle }}</div>
               <div class="info" style="display: flex;justify-content: space-around;">
-                <span class="pub_date"><span>发布日期: {{ articleList[0].createTime }}</span></span>
-                <span class="source"><span>来源: {{ articleList[0].deptName }}</span></span>
-                <span class="views"><span>访问次数: {{ articleList[0].hotpots || 0 }}</span></span>
+                <span class="pub_date"><span>{{ $t('common.releaseDate') }}: {{ articleList[0].createTime }}</span></span>
+                <span class="source"><span>{{ $t('common.source') }}: {{ articleList[0].deptName }}</span></span>
+                <span class="views"><span>{{ $t('common.visits') }}: {{ articleList[0].hotpots || 0 }}</span></span>
               </div>
               <div class="img_txt" v-html="pageContent">
               </div>
@@ -56,15 +58,15 @@
               <img :src="item.imgUrl | imgFilter" alt="" v-for="item in articleList" :key="item.id" class="img">
             </div>
             <div class=" empty" v-if="articleList.length === 0">
-              暂无数据～
+              {{ $t('common.noData') }}
             </div>
           </div>
           <div class="bottom_wrp" style="width: 100%;" v-if="linkType === '3' && articleList.length">
             <div class="bottom">
               <div class="print" @click="print"><i class="el-icon-printer" style="color: rgb(0, 133, 76);"></i> <span
-                  class="txt">打印本页</span></div>
+                  class="txt">{{ $t('common.print') }}</span></div>
               <div class="close" @click="close"><i class="el-icon-circle-close" style="color: rgb(228, 116, 112);"></i>
-                <span class="txt">关闭</span>
+                <span class="txt">{{ $t('common.close') }}</span>
               </div>
             </div>
           </div>
@@ -91,6 +93,7 @@ export default {
       code: '',
       activeIndex: 0,
       mainTitle: '',
+      enMainTitle: '',
       subTitle: '',
       id: '',
       navList: [],
@@ -104,7 +107,8 @@ export default {
   },
   computed: {
     pageContent () {
-      return this.articleList[0].content.replace('src="', `src="${process.env.VUE_APP_PUBLIC_URL}`)
+      const content = this.$i18n.locale === 'zh' ? this.articleList[0].content : this.articleList[0].enContent
+      return (content || '').replace('src="', `src="${process.env.VUE_APP_PUBLIC_URL}`)
     }
   },
   filters: {
@@ -134,6 +138,7 @@ export default {
       if (res.code === 0) {
         this.navList = res.data.list
         this.mainTitle = res.data.name
+        this.enMainTitle = res.data.enName
         this.code = res.data.code
 
 
@@ -164,9 +169,12 @@ export default {
         this.total = res.data.total
       }
     },
-    selectTab (index, tabId, linkType) {
+    selectTab (index, tabId, linkType, item) {
       this.activeIndex = index
       this.linkType = linkType
+      if (this.linkType === '1') {
+        window.open(item.linkUrl, "_blank");
+      }
       this.getList(tabId)
     },
     back () {
@@ -361,6 +369,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        text-align: center;
         color: #fff;
         font-weight: 700;
         font-size: 24px;

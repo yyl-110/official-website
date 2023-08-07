@@ -8,7 +8,7 @@
     </div>
     <div class="content">
       <p class="text">
-        {{ articelDetail.introduction }}
+        {{ $i18n.locale === 'zh' ? articelDetail.introduction : articelDetail.enIntroduction }}
       </p>
       <div class="btn" @click="goTo">{{ $t('common.more') }}<img src="../../../assets/image/right.png" alt=""></div>
     </div>

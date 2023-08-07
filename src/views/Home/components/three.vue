@@ -7,9 +7,9 @@
           <div class="imgwrap" v-for="val in item" :key="val.id" @click="goToDetail(val.id)">
             <img :src="val.imgUrl | imgFilter" alt="" class="img">
             <div class="content">
-              <h1>{{ val.title }}</h1>
+              <h1>{{ $i18n.locale === 'zh' ? val.title : val.enTitle }}</h1>
               <div class="info">
-                {{ val.introduction }}
+                {{ $i18n.locale === 'zh' ? val.introduction : val.enIntroduction }}
               </div>
               <div class="more">
                 {{ $t('common.more') }} <img src="../../../assets/image/right.png" alt="">

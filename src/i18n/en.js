@@ -9,5 +9,12 @@ export default {
     nav_title7:'Picture Appreciation',
     nav_title8:'Virtual tour',
     more:'More',
+    releaseDate:'Release Date',
+    source:'Source',
+    visits:'Visits',
+    noData: 'There is currently no data available',
+    print:'Print',
+    close:'Close',
+    currentLocation:'Current Location'
   }
 }

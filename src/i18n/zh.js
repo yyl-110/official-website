@@ -10,5 +10,12 @@ export default {
     nav_title7:'图片鉴赏',
     nav_title8:'虚拟游',
     more:'更多',
+    releaseDate:'发布日期',
+    source:'来源',
+    visits:'访问次数',
+    noData:'暂无数据～',
+    print:'打印本页',
+    close:'关闭',
+    currentLocation:'当前位置'
   }
 }

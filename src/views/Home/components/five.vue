@@ -5,14 +5,14 @@
     <div class="content">
       <div class="nav">
         <div :class="['item', selectId === item.id ? 'active' : '']" v-for="item in navList" :key="item.id"
-          @click="getSelectData(item.id)">{{ item.name }}
+          @click="getSelectData(item.id)">{{ $i18n.locale === 'zh' ? item.name : item.enName }}
         </div>
       </div>
       <div class="cardList">
         <template v-if="articleList.length > 0">
           <div class="cardItem" v-for="item in articleList" :key="item.id" @click="goToDetail(item.id)">
-            <div class="title">{{ item.title }}</div>
-            <div class="introduction">{{ item.introduction }}</div>
+            <div class="title">{{ $i18n.locale === 'zh' ? item.title : item.enTitle }}</div>
+            <div class="introduction">{{  $i18n.locale === 'zh' ? item.introduction : item.enIntroduction }}</div>
             <div class="bot">
               <div class="line"></div>
               <div class="date">
@@ -25,7 +25,7 @@
             </div>
           </div>
         </template>
-        <div class="empty" v-else>暂无数据～</div>
+        <div class="empty" v-else>{{ $t('common.noData')  }}</div>
       </div>
     </div>
 

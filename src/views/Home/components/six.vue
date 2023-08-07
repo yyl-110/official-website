@@ -4,7 +4,7 @@
     <div class="content">
       <div class="item" v-for="(item, index) in navList" :key="item.id" @click="goToList(item.id)">
         <img :src="item.imgUrl | imgFilter" alt="">
-        <p class="text">{{ item.name }}</p>
+        <p class="text">{{ $i18n.locale === 'zh' ? item.name : item.enName }}</p>
       </div>
     </div>
   </div>

@@ -6,7 +6,7 @@
       <div class="nav">
         <div :class="['item', selectId === item.id ? 'active' : '']" v-for="item in navList" :key="item.id"
           @click="getSelectData(item.id)">
-          {{ item.name }}
+          {{ $i18n.locale === 'zh' ? item.name : item.enName }}
         </div>
       </div>
       <div class="cardWrap">
@@ -18,8 +18,8 @@
                 <div class="year">{{ item.createTime | formatYear }}</div>
               </div>
               <div class="info">
-                <div class="title">{{ item.title }}</div>
-                <div class="desc">{{ item.introduction }}</div>
+                <div class="title">{{ $i18n.locale === 'zh' ? item.title : item.enTitle }}</div>
+                <div class="desc">{{ $i18n.locale === 'zh' ? item.introduction : item.enIntroduction }}</div>
               </div>
             </div>
           </el-col>
@@ -33,8 +33,8 @@
                 <div class="year">{{ item.createTime | formatYear }}</div>
               </div>
               <div class="info">
-                <div class="title">{{ item.title }}</div>
-                <div class="desc">{{ item.introduction }}</div>
+                <div class="title">{{ $i18n.locale === 'zh' ? item.title : item.enTitle }}</div>
+                <div class="desc">{{ $i18n.locale === 'zh' ? item.introduction : item.enIntroduction }}</div>
               </div>
             </div>
           </el-col>

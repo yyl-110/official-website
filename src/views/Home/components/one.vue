@@ -15,7 +15,7 @@
         <vue-seamless-scroll v-if="tempArray.length >= 1" :data="tempArray" class="seamless-warp"
           :class-option="defaultOption">
           <div class="info" v-for="item in tempArray" :key="item.noticeId" @click="goTo(item)">
-            <div class="content" v-html="item.noticeTitle">
+            <div class="content" v-html="$i18n.locale === 'zh' ? item.noticeTitle : item.enNoticeTitle">
             </div>
             <div class="time">{{ item.createTime }}</div>
           </div>

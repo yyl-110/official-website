@@ -1,18 +1,19 @@
 <template>
-  <header :class="[activeIndex === 0 ? 'active' : '']">
+  <header>
     <div class="logo">
       <img src="../assets/image/logo2.png" alt />
     </div>
     <div class="nav_header">
       <div class="tab">
-        <div :class="['tab_r', activeIndex === 0 ? 'homeTab' : '']">
+        <div :class="['tab_r']">
           <div :class="['tab_item', defaultActive === item.code ? 'current' : '']" v-for="(item, index) in navList"
             :key="item.id" @click="handleSelect(item.code, index, item.id)">
-            <span>{{ item.name }}</span>
+            <span>{{ $i18n.locale === "zh" ? item.name : item.enName }}</span>
             <div class="tab_item_sub" v-if="item.list && item.list.length">
               <span style="display: flex; flex-direction: column;">
                 <span class="tab_item_sub_txt" v-for="val in item.list" :key="val.id"
-                  @click.stop="handleSubSelect(item.code, index, val.id, val.code)">{{ val.name }}</span>
+                  @click.stop="handleSubSelect(item.code, index, val.id, val.code)">{{ $i18n.locale === "zh" ? val.name :
+                    val.enName }}</span>
               </span>
             </div>
           </div>
@@ -24,7 +25,8 @@
     <div class="navbar_collapse" v-if="show">
       <ul class="nav navbar_nav">
         <li v-for="item in navList" :key="item.id"><span :class="[defaultActive === item.code ? 'active' : '']"
-            @click="handleSelect(item.code, index, item.id)">{{ item.name }}</span></li>
+            @click="handleSelect(item.code, index, item.id)">{{ $i18n.locale === "zh" ? item.name : item.enName }}</span>
+        </li>
       </ul>
     </div>
   </header>
@@ -272,11 +274,11 @@ header {
   padding-left: 57px;
 
 
-  &.active {
-    border-bottom: 1px solid rgba(234, 234, 234, 0.3);
-    background: transparent;
-    box-shadow: none;
-  }
+  // &.active {
+  //   border-bottom: 1px solid rgba(234, 234, 234, 0.3);
+  //   background: transparent;
+  //   box-shadow: none;
+  // }
 
 
   .navbar_toggle {
